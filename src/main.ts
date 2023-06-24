@@ -1,25 +1,52 @@
-import { ViteSSG } from 'vite-ssg'
-import { setupLayouts } from 'virtual:generated-layouts'
-
-// import Previewer from 'virtual:vue-component-preview'
 import App from './App.vue'
-import type { UserModule } from './types'
-import generatedRoutes from '~pages'
-
 import '@unocss/reset/tailwind.css'
 import './styles/main.css'
 import 'uno.css'
+import 'element-plus/dist/index.css'
 
-const routes = setupLayouts(generatedRoutes)
+import { setupStore } from '~/modules/stores'
+import { setupRouter } from '~/modules/router'
+import { setupI18n } from '~/modules/i18n'
 
-// https://github.com/antfu/vite-ssg
-export const createApp = ViteSSG(
-  App,
-  { routes, base: import.meta.env.BASE_URL },
-  (ctx) => {
-    // install all modules under `modules/`
-    Object.values(import.meta.glob<{ install: UserModule }>('./modules/*.ts', { eager: true }))
-      .forEach(i => i.install?.(ctx))
-    // ctx.app.use(Previewer)
-  },
-)
+async function bootstrap() {
+  const app = createApp(App)
+
+  // Configure routing
+  // 配置路由
+  setupRouter(app)
+
+  // Configure store
+  // 配置 store
+  setupStore(app)
+  //
+  // // Initialize internal system configuration
+  // // 初始化内部系统配置
+  // initAppConfigStore()
+  //
+  // // Register global components
+  // // 注册全局组件
+  // registerGlobComp(app)
+
+  // Multilingual configuration
+  // 多语言配置
+  setupI18n(app)
+
+  // // router-guard
+  // // 路由守卫
+  // setupRouterGuard(router)
+  //
+  // // Register global directive
+  // // 注册全局指令
+  // setupGlobDirectives(app)
+  //
+  // // Configure global error handling
+  // // 配置全局错误处理
+  // setupErrorHandle(app)
+
+  // https://next.router.vuejs.org/api/#isready
+  // await router.isReady();
+
+  app.mount('#app')
+}
+
+bootstrap()
