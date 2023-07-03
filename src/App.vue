@@ -5,10 +5,11 @@ const locale = zhCn
 </script>
 
 <template>
-  <div class="m-5">
-    <el-config-provider :locale="locale">
-      <router-view />
-    </el-config-provider>
-  </div>
-  <TheFooter />
+  <el-config-provider :locale="locale">
+    <router-view />
+  </el-config-provider>
 </template>
+
+<style scoped lang="scss">
+
+</style>

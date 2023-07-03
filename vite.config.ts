@@ -15,11 +15,13 @@ import Shiki from 'markdown-it-shiki'
 import VueMacros from 'unplugin-vue-macros/vite'
 import WebfontDownload from 'vite-plugin-webfont-dl'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 export default defineConfig({
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,
+      '@svg/': `${path.resolve(__dirname, 'src/assets/svg')}/`,
     },
   },
 
@@ -30,6 +32,26 @@ export default defineConfig({
           include: [/\.vue$/, /\.md$/],
         }),
       },
+    }),
+
+    // https://github.com/vbenjs/vite-plugin-svg-icons/blob/main/README.zh_CN.md
+    createSvgIconsPlugin({
+      // 指定需要缓存的图标文件夹
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
+      // 指定symbolId格式
+      symbolId: 'icon-[dir]-[name]',
+
+      /**
+       * 自定义插入位置
+       * @default: body-last
+       */
+      // inject?: 'body-last' | 'body-first'
+
+      /**
+       * custom dom id
+       * @default: __svg__icons__dom__
+       */
+      // customDomId: '__svg__icons__dom__',
     }),
 
     // https://github.com/JohnCampionJr/vite-plugin-vue-layouts
@@ -114,19 +136,26 @@ export default defineConfig({
     },
   },
 
-  ssr: {
-    // TODO: workaround until they support native ESM
-    noExternal: ['workbox-window', /vue-i18n/],
-  },
+  // ssr: {
+  //   // TODO: workaround until they support native ESM
+  //   noExternal: ['workbox-window', /vue-i18n/],
+  // },
 
   css: {
     /* CSS 预处理器 */
     preprocessorOptions: {
       scss: {
+        javascriptEnabled: true,
         additionalData: `
-        @import "~/assets/styles/variables.scss";
-        `,
+        @import "~/styles/_mixins.scss";
+        @import "~/styles/_variables.scss";`,
       },
+    },
+  },
+
+  server: {
+    watch: {
+      usePolling: true,
     },
   },
 

@@ -13,6 +13,7 @@ async function toggleLocales() {
 </script>
 
 <template>
+  <div class="hot-update">=======++++++++++++++++==============</div>
   <nav flex="~ gap-4" mt-6 justify-center text-xl>
     <RouterLink icon-btn to="/" :title="t('button.home')">
       <div i-carbon-campsite />
@@ -35,3 +36,10 @@ async function toggleLocales() {
     </a>
   </nav>
 </template>
+
+<style scoped>
+.hot-update {
+  color: red;
+  background-color: yellowgreen;
+}
+</style>

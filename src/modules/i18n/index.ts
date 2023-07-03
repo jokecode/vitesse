@@ -9,7 +9,8 @@ import type { App } from 'vue'
 // Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite
 const i18n = createI18n({
   legacy: false,
-  locale: 'zh-CN',
+  // locale: 'zh-CN',
+  globalInjection: true, // 全局注册$t方法
   messages: {},
 })
 
@@ -50,3 +51,5 @@ export function setupI18n(app: App) {
   app.use(i18n)
   loadLanguageAsync('zh-CN')
 }
+
+export default i18n

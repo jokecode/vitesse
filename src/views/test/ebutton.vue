@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import ScrollPane from '~/layouts/components/TagsView/ScrollPane.vue'
+
 const buttons = [
   // 类型 "" | "primary" | "success" | "info" | "warning" | "danger"
   // 不可分配给类型 "primary" | "success" | "warning" | "danger" | "info" | "text"
-  { type: 'text', text: 'plain' },
+  { type: '', text: 'plain' },
   { type: 'primary', text: 'primary' },
   { type: 'success', text: 'success' },
   { type: 'info', text: 'info' },
@@ -49,4 +51,18 @@ const buttons = [
       {{ button.text }}
     </el-button>
   </div>
+
+  <div>===================</div>
+  <div>===================</div>
+  <div>
+    <ScrollPane>
+      <ul>
+        <li v-for="item in 120" :key="item">
+          {{ item }}
+        </li>
+      </ul>
+    </ScrollPane>
+  </div>
+  <div>===================</div>
+  <div>===================</div>
 </template>

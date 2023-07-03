@@ -1,33 +1,71 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { useTagsViewStore } from '~/modules/stores/modules/tags-view'
+import { getToken, removeToken, setToken } from '~/utils/cookies'
+import user from '~/api/users'
 
-export const useUserStore = defineStore('user', () => {
-  /**
-   * Current name of the user.
-   */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+export const useUserStore = defineStore('user', {
+  state: () => {
+    return {
+      token: getToken() || '',
+      name: '',
+      avatar: '',
+      introduction: '',
+      roles: Array<string>(),
+      email: '',
+    }
+  },
+  // 也可以这样定义
+  // state: () => ({ count: 0 })
 
-  const usedNames = computed(() => Array.from(previousNames.value))
-  const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
+  getters: {
+    // double: (state) => state.count * 2,
+  },
 
-  /**
-   * Changes the current name of the user and saves the one that was used
-   * before.
-   *
-   * @param name - new name to set
-   */
-  function setNewName(name: string) {
-    if (savedName.value)
-      previousNames.value.add(savedName.value)
+  actions: {
+    SET_TOKEN(token: string) {
+      this.token = token
+    },
+    SET_NAME(name: string) {
+      this.name = name
+    },
+    SET_AVATAR(avatar: string) {
+      this.avatar = avatar
+    },
+    SET_INTRODUCTION(introduction: string) {
+      this.introduction = introduction
+    },
+    SET_ROLES(roles: string[]) {
+      this.roles = roles
+    },
+    SET_EMAIL(email: string) {
+      this.email = email
+    },
+    async LOG_OUT() {
+      if (this.token === '')
+        throw new Error('LogOut: token is undefined!')
 
-    savedName.value = name
-  }
+      await user.crud.logout()
+      removeToken()
 
-  return {
-    setNewName,
-    otherNames,
-    savedName,
-  }
+      // resetRouter()
+
+      // Reset visited views and cached views
+      useTagsViewStore().DEL_ALL_VISITED_VIEWS()
+      useTagsViewStore().DEL_ALL_CACHED_VIEWS()
+
+      this.SET_TOKEN('')
+      this.SET_ROLES([])
+    },
+    async LOGIN(userInfo: { username: string; password: string }) {
+      let { username, password } = userInfo
+      username = username.trim()
+      await user.crud.login({ username, password }).then((res) => {
+        const { data } = res
+        setToken(data.accessToken)
+        this.SET_TOKEN(data.accessToken)
+      })
+    },
+  },
 })
 
 if (import.meta.hot)

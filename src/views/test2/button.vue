@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import vueSvg from '~/assets/svg/vue.svg'
+import bugSvg from '~/assets/svg/bug.svg'
 
 // 响应式状态
 const count = ref(0)
@@ -27,8 +29,18 @@ onMounted(() => {
   <h1>===============</h1>
   <el-button>我是 ElButton</el-button>
   <h1>===============</h1>
+  <div class="hot-reload">
+    9090909009090
+  </div>
+  <div class="hot-reload">
+    9090909009090
+  </div>
+  <br>
 </template>
 
 <style scoped>
-
+.hot-reload {
+  color: #E65D6E;
+  background-color: yellow;
+}
 </style>
